@@ -1,0 +1,120 @@
+{
+    "rules": {
+      "react_prohibit_if_else_if_else": {
+        "description": "When writing React code, avoid using if-else if-else blocks as they reduce readability and maintainability. Use early returns instead.",
+        "severity": "error",
+        "examples": {
+          "bad": [
+            {
+              "code": "if (condition1) { /* do something */ } else if (condition2) { /* do something else */ } else { /* default action */ }",
+              "explanation": "This code uses if-else if-else, which is harder to maintain and less readable."
+            }
+          ],
+          "good": [
+            {
+              "code": "if (condition1) { /* do something */ return; } if (condition2) { /* do something else */ return; } /* default action */",
+              "explanation": "This code uses early returns, making it easier to maintain and understand."
+            }
+          ]
+        }
+      },
+      "react_best_practices": {
+        "description": "When writing React code, follow React best practices, including writing functional components with concise logic.",
+        "severity": "info",
+        "examples": {
+          "bad": [
+            {
+              "code": "class MyComponent extends React.Component { render() { /* logic here */ } }",
+              "explanation": "Avoid class components in modern React."
+            }
+          ],
+          "good": [
+            {
+              "code": "const MyComponent = () => { /* logic here */ };",
+              "explanation": "Use functional components and hooks in modern React."
+            }
+          ]
+        }
+      },
+      "react_useEffect_synchronization_only": {
+        "description": "When writing React code, useEffect should only be used for synchronizing with external systems, not for data transformations or event handling",
+        "severity": "error",
+        "examples": {
+          "bad": [
+            {
+              "code": "useEffect(() => { setFullName(firstName + ' ' + lastName) }, [firstName, lastName])",
+              "explanation": "Don't use Effects for data transformations that can be done during render"
+            },
+            {
+              "code": "useEffect(() => { fetch('/api/buy', { method: 'POST' }) }, [])",
+              "explanation": "Don't use Effects for event-specific logic like purchases - use event handlers instead"
+            }
+          ],
+          "good": [
+            {
+              "code": "useEffect(() => { const connection = createConnection(); connection.connect(); return () => connection.disconnect(); }, [])",
+              "explanation": "Use Effects for synchronizing with external systems like WebSocket connections"
+            },
+            {
+              "code": "useEffect(() => { const subscription = subscribe(callback); return () => subscription.unsubscribe(); }, [callback])",
+              "explanation": "Use Effects for subscriptions to external data sources"
+            }
+          ]
+        }
+      },
+      "react_useEffect_cleanup": {
+        "description": "When writing React code, effects that create resources or subscriptions must clean them up",
+        "severity": "error", 
+        "examples": {
+          "bad": [
+            {
+              "code": "useEffect(() => { window.addEventListener('scroll', handler) }, [])",
+              "explanation": "Missing cleanup - this will cause memory leaks"
+            }
+          ],
+          "good": [
+            {
+              "code": "useEffect(() => { window.addEventListener('scroll', handler); return () => window.removeEventListener('scroll', handler); }, [])",
+              "explanation": "Properly cleans up subscriptions when component unmounts"
+            }
+          ]
+        }
+      },
+      "react_prefer_event_handlers": {
+        "description": "When writing React code, use event handlers instead of Effects for handling user interactions",
+        "severity": "warning",
+        "examples": {
+          "bad": [
+            {
+              "code": "useEffect(() => { if (isSubmitted) { submitForm(data) } }, [isSubmitted])",
+              "explanation": "Form submission should be handled by event handlers, not Effects"
+            }
+          ],
+          "good": [
+            {
+              "code": "const handleSubmit = () => { submitForm(data) }",
+              "explanation": "Handle user interactions with event handlers"
+            }
+          ]
+        }
+      },
+      "react_avoid_state_synchronization": {
+        "description": "When writing React code, avoid using Effects just to synchronize state variables - calculate values during render instead",
+        "severity": "warning",
+        "examples": {
+          "bad": [
+            {
+              "code": "useEffect(() => { setTotal(items.reduce((sum, item) => sum + item.price, 0)) }, [items])",
+              "explanation": "Don't use Effects for calculations that can be done during render"
+            }
+          ],
+          "good": [
+            {
+              "code": "const total = items.reduce((sum, item) => sum + item.price, 0)",
+              "explanation": "Calculate derived values during render"
+            }
+          ]
+        }
+      }
+    }
+  }
